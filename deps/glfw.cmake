@@ -158,4 +158,11 @@ target_include_directories(glfw
         SYSTEM INTERFACE ${GLFW_INCLUDE_DIR}
         )
 
-target_link_libraries(glfw INTERFACE ${GLFW_LIBRARIES})
+if(NOT APPLE)
+    # Use the system-provided Vulkan loader + ICD
+    find_package(Vulkan REQUIRED)
+    target_link_libraries(glfw INTERFACE ${GLFW_LIBRARIES} Vulkan::Vulkan)
+else()
+    # On Mac we're linking statically to MoltenVK
+    target_link_libraries(glfw INTERFACE ${GLFW_LIBRARIES})
+endif()
