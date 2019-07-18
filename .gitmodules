@@ -31,3 +31,6 @@
 [submodule "deps/glslang"]
 	path = deps/glslang
 	url = git@github.com:KhronosGroup/glslang.git
+[submodule "deps/vulkan-validationlayers"]
+	path = deps/vulkan-validationlayers
+	url = git@github.com:KhronosGroup/Vulkan-ValidationLayers.git
