@@ -9,7 +9,7 @@ get_filename_component(EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 add_executable(${EXECUTABLE} main.cpp)
 
-target_link_libraries(${EXECUTABLE} PRIVATE Vulkan::Vulkan Vulkan::Headers glfw glm VkLayer_core_validation)
+target_link_libraries(${EXECUTABLE} PRIVATE glfw glm)
 
 if (APPLE)
     get_target_property(VK_ICD_FILENAMES moltenvk VK_ICD_FILENAMES)
