@@ -34,3 +34,6 @@
 [submodule "deps/vulkan-validationlayers"]
 	path = deps/vulkan-validationlayers
 	url = git@github.com:KhronosGroup/Vulkan-ValidationLayers.git
+[submodule "deps/vulkan-loader"]
+	path = deps/vulkan-loader
+	url = git@github.com:KhronosGroup/Vulkan-Loader.git
