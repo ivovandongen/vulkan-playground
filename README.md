@@ -2,7 +2,7 @@
 
 ## Building on linux
 Linux builds link to the system provided Vulkan loader
-- Install prerequisites: `sudo apt install vulkan-validationlayers vulkan-tools libvulkan-dev`
+- Install prerequisites: `sudo apt install vulkan-validationlayers vulkan-tools libvulkan-dev xorg-dev libwayland-dev`
 - Run cmake and build: `mkdir build && cd build && cmake .. && make all`
 
 ## Building on Mac

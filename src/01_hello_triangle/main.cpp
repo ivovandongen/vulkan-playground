@@ -32,6 +32,13 @@ const int WIDTH = 800;
 const int HEIGHT = 600;
 
 const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+const std::vector<const char*> deprecatedValidationLayers = {
+    "VK_LAYER_LUNARG_core_validation",
+    "VK_LAYER_LUNARG_standard_validation",
+    "VK_LAYER_LUNARG_parameter_validation",
+    "VK_LAYER_LUNARG_object_tracker",
+    "VK_LAYER_GOOGLE_unique_objects",
+    "VK_LAYER_GOOGLE_threading"};
 
 const std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
@@ -106,12 +113,15 @@ private:
     void initVulkan() {
         listAvailableExtensions();
 
-        if (enableValidationLayers && !checkValidationLayerSupport()) {
+        if (enableValidationLayers && !(checkValidationLayerSupport(validationLayers) ||
+                                        checkValidationLayerSupport(deprecatedValidationLayers))) {
             throw std::runtime_error("validation layers requested, but not available!");
         }
 
         createInstance();
-        setupDebugMessenger();
+        if (enableValidationLayers) {
+            setupDebugMessenger();
+        }
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
@@ -169,8 +179,11 @@ private:
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 
-            createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-            createInfo.ppEnabledLayerNames = validationLayers.data();
+            const auto& layers =
+                checkValidationLayerSupport(validationLayers) ? validationLayers : deprecatedValidationLayers;
+
+            createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+            createInfo.ppEnabledLayerNames = layers.data();
         } else {
             createInfo.enabledLayerCount = 0;
         }
@@ -192,7 +205,7 @@ private:
         }
     }
 
-    bool checkValidationLayerSupport() {
+    bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers) {
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
         std::vector<VkLayerProperties> availableLayers(layerCount);
@@ -331,7 +344,7 @@ private:
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
-        for (size_t i = 1; i < queueFamilyCount; i++) {
+        for (size_t i = 0; i < queueFamilyCount; i++) {
             const auto& queueFamily = queueFamilies[i];
             if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
                 indices.graphicsFamily = i;
