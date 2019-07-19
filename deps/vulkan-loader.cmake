@@ -7,5 +7,6 @@ add_library(vulkan-loader ALIAS vulkan)
 
 if (APPLE)
     include_vendor_pkg(moltenvk)
-    add_dependencies(vulkan moltenvk)
+    include_vendor_pkg(vulkan-validationlayers)
+    add_dependencies(vulkan moltenvk vulkan-validationlayers)
 endif(APPLE)
