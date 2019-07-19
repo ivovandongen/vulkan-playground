@@ -31,7 +31,7 @@ file(GLOB_RECURSE SHADER_CVTR_SRC_FILES
         "${SHADER_CVTR_SRC_DIR}/*.m"
         "${SHADER_CVTR_SRC_DIR}/*.cpp")
 
-add_library(moltenvk STATIC
+add_library(moltenvk SHARED
 
         ${DEF_FILES}
         ${HEADER_FILES}
@@ -41,7 +41,6 @@ add_library(moltenvk STATIC
 
 target_include_directories(moltenvk
         PUBLIC ${CMAKE_SOURCE_DIR}/deps/moltenvk/MoltenVK/include
-        PRIVATE
         ${MAIN_SRC_DIR}/API
         ${MAIN_SRC_DIR}/Commands
         ${MAIN_SRC_DIR}/GPUObjects
@@ -56,6 +55,12 @@ target_include_directories(moltenvk
         ${SHADER_CVTR_SRC_DIR}/MoltenVKGLSLToSPIRVConverter
         ${SHADER_CVTR_SRC_DIR}/MoltenVKShaderConverterTool
         )
+set(OUTPUT_DIR ${CMAKE_BINARY_DIR}/moltenvk)
+set_target_properties(moltenvk PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR})
+set_target_properties(moltenvk PROPERTIES OUTPUT_NAME "MoltenVK")
+
+configure_file(${CMAKE_SOURCE_DIR}/deps/moltenvk/MoltenVK/icd/MoltenVK_icd.json ${OUTPUT_DIR}/MoltenVK_icd.json COPYONLY)
+set_target_properties(moltenvk PROPERTIES VK_ICD_FILENAMES ${OUTPUT_DIR}/MoltenVK_icd.json)
 
 target_link_libraries(moltenvk PRIVATE vulkan-headers vulkan-portability spirv-cross spirv-tools SPIRV cereal glslang)
-target_link_libraries(moltenvk INTERFACE "-framework AppKit -framework Metal -framework MetalKit -framework ModelIO -framework IOSurface -framework QuartzCore -framework CoreFoundation")
+target_link_libraries(moltenvk PUBLIC "-framework AppKit -framework Metal -framework MetalKit -framework ModelIO -framework IOSurface -framework IOKit -framework QuartzCore -framework CoreFoundation")
