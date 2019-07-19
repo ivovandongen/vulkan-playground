@@ -14,6 +14,10 @@ option(GIT_SUBMODULE "Check submodules during build" ON)
 # CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
+# Work around broken find_package
+find_package(Python3 COMPONENTS Interpreter)
+find_package(PythonInterp 3 REQUIRED)
+
 # Load modules
 include(${CMAKE_MODULE_PATH}/git.cmake)
 include(${CMAKE_MODULE_PATH}/include_vendor_pkg.cmake)
