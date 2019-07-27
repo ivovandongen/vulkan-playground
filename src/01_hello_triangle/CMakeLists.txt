@@ -31,7 +31,8 @@ function (compile_shader INPUT OUTPUT)
             VERBATIM
             )
 
-    string(REPLACE "/" "_" TARGET ${INPUT})
+    file(RELATIVE_PATH TARGET ${PROJECT_SOURCE_DIR} ${INPUT})
+    string(REPLACE "/" "_" TARGET ${TARGET})
     add_custom_target(compile-${TARGET} DEPENDS ${OUTPUT})
     add_dependencies(compile-${TARGET} glslangValidator)
     add_dependencies(${EXECUTABLE} compile-${TARGET} )
