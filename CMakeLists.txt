@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # Options
+option(USE_SYSTEM_VULKAN_SDK "Use external vulkan sdk (should be provided by setting VULKAN_SDK=<PATH>/macOS" OFF)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 
 # Update submodules as needed
